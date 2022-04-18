@@ -1,20 +1,42 @@
-@echo off
 @SETLOCAL ENABLEDELAYEDEXPANSION
 
 @set LABEL=%1
 @shift /1
 
-@set ARG1=%1
-@rem set ARG2=%1
-@rem set ARG3=%1
+@rem First arg is IN/OUT parameter
+@set IN_OUT=%1
 
-@if "%LABEL%"=="LoCase"                 @call :LoCase                  ARG1
-@if "%LABEL%"=="UpCase"                 @call :UpCase                  ARG1
-@if "%LABEL%"=="ChangeSlashToDosNative" @call :ChangeSlashToDosNative  ARG1
-@if "%LABEL%"=="ChangeSlashToUnix"      @call :ChangeSlashToUnix       ARG1
-@echo %ARG1%
+@rem Collect other args
+@set ARGS=
+:ARGS_LOOP
+@shift /1
+@if "%1"=="" @goto END_ARGS_LOOP
+@set ARGS=%ARGS% %1
+@goto ARGS_LOOP
+:END_ARGS_LOOP
+
+@rem Name "export" table: 
+@rem if "%LABEL%"=="FN"              @call :FN               IN_OUT %ARGS%
+@rem Prolog End
+@rem ----------
+
+
+@if "%LABEL%"=="ARGS_ECHO"              @call :ARGS_ECHO               IN_OUT %ARGS%
+@if "%LABEL%"=="LoCase"                 @call :LoCase                  IN_OUT %ARGS%
+@if "%LABEL%"=="UpCase"                 @call :UpCase                  IN_OUT %ARGS%
+@if "%LABEL%"=="ChangeSlashToDosNative" @call :ChangeSlashToDosNative  IN_OUT %ARGS%
+@if "%LABEL%"=="ChangeSlashToUnix"      @call :ChangeSlashToUnix       IN_OUT %ARGS%
+@echo %IN_OUT%
 @exit /b
 @rem 
+@rem 
+@rem 
+@rem ------------------------------------------
+:ARGS_ECHO
+@echo %1 %2 %3 %4 %5 %6 %7 %8 %9
+@SET %1=RESULT
+@exit /b
+@rem
 @rem 
 @rem ------------------------------------------
 @rem https://www.robvanderwoude.com/battech_convertcase.php
@@ -50,6 +72,8 @@
 @rem echo %1
 @exit /b
 @rem 
+@rem 
+@rem ------------------------------------------
 :UpCase
 @rem Subroutine to convert a variable VALUE to all upper case.
 @rem  The argument for this subroutine is the variable NAME.
@@ -81,10 +105,12 @@
 @SET %~1=!%~1:z=Z!
 @exit /b
 @rem 
+@rem 
 @rem ------------------------------------------
 :ChangeSlashToDosNative
 @SET %~1=!%~1:/=\!
 @exit /b
+@rem 
 @rem 
 @rem ------------------------------------------
 :ChangeSlashToUnix
